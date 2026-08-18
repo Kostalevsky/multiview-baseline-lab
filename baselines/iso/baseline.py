@@ -1,6 +1,8 @@
-from pathlib import Path
 import subprocess
+from pathlib import Path
+
 from baselines.cad2tech.output import create_collage
+
 
 class ISOBaseline:
     name = "iso"
@@ -13,25 +15,13 @@ class ISOBaseline:
 
         project_root = Path(__file__).resolve().parents[2]
 
-        blender_path = (
-            "/Applications/Blender.app/"
-            "Contents/MacOS/Blender"
-        )
+        blender_path = "/Applications/Blender.app/" "Contents/MacOS/Blender"
 
-        render_script = (
-            project_root
-            / "rendering"
-            / "render_iso_views.py"
-        )
+        render_script = project_root / "rendering" / "render_iso_views.py"
 
         model_name = input_path.stem
 
-        output_dir = (
-            project_root
-            / "outputs"
-            / model_name
-            / "iso"
-        )
+        output_dir = project_root / "outputs" / model_name / "iso"
 
         selected_dir = output_dir / "selected"
         collage_path = output_dir / "collage.png"
@@ -66,9 +56,7 @@ class ISOBaseline:
         )
 
         if result.returncode != 0:
-            raise RuntimeError(
-                "ISO rendering failed."
-            )
+            raise RuntimeError("ISO rendering failed.")
 
         view_names = [
             "front",
@@ -79,21 +67,12 @@ class ISOBaseline:
             "bottom",
         ]
 
-        view_paths = [
-            selected_dir / f"{name}.png"
-            for name in view_names
-        ]
+        view_paths = [selected_dir / f"{name}.png" for name in view_names]
 
-        missing = [
-            path
-            for path in view_paths
-            if not path.exists()
-        ]
+        missing = [path for path in view_paths if not path.exists()]
 
         if missing:
-            raise RuntimeError(
-                f"Missing ISO views: {missing}"
-            )
+            raise RuntimeError(f"Missing ISO views: {missing}")
 
         print("[ISO] Generated 6 orthographic views")
 
@@ -106,10 +85,7 @@ class ISOBaseline:
             columns=3,
         )
 
-        print(
-            f"[ISO] Collage saved to: "
-            f"{collage_path}"
-        )
+        print(f"[ISO] Collage saved to: " f"{collage_path}")
 
         print()
         print("[ISO] Done.")

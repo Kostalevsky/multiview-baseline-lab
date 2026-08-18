@@ -1,15 +1,17 @@
-import bpy
-import sys
 import math
 import random
+import sys
 from pathlib import Path
+
+import bpy
 from mathutils import Vector
+
 
 def get_args():
     if "--" not in sys.argv:
         raise RuntimeError("Arguments were not provided.")
 
-    args = sys.argv[sys.argv.index("--") + 1:]
+    args = sys.argv[sys.argv.index("--") + 1 :]
 
     if len(args) < 2:
         raise RuntimeError("Expected: model_path output_dir")
@@ -27,11 +29,7 @@ def import_obj(model_path):
 
 
 def get_mesh_objects():
-    return [
-        obj
-        for obj in bpy.context.scene.objects
-        if obj.type == "MESH"
-    ]
+    return [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
 
 
 def scene_bbox(mesh_objects):
@@ -75,15 +73,11 @@ def normalize_scene(mesh_objects):
 
 
 def apply_material(mesh_objects):
-    material = bpy.data.materials.new(
-        name="BaselineMaterial"
-    )
+    material = bpy.data.materials.new(name="BaselineMaterial")
 
     material.use_nodes = True
 
-    bsdf = material.node_tree.nodes.get(
-        "Principled BSDF"
-    )
+    bsdf = material.node_tree.nodes.get("Principled BSDF")
 
     bsdf.inputs["Base Color"].default_value = (
         0.08,
@@ -134,9 +128,7 @@ def create_light():
         500,
     ]
 
-    for i, (position, energy) in enumerate(
-        zip(positions, energies)
-    ):
+    for i, (position, energy) in enumerate(zip(positions, energies)):
         light_data = bpy.data.lights.new(
             name=f"Light_{i}",
             type="AREA",
@@ -169,7 +161,12 @@ def setup_render():
 
     scene.world.use_nodes = True
     background = scene.world.node_tree.nodes.get("Background")
-    background.inputs["Color"].default_value = (0.95, 0.95, 0.95, 1.0,)
+    background.inputs["Color"].default_value = (
+        0.95,
+        0.95,
+        0.95,
+        1.0,
+    )
     background.inputs["Strength"].default_value = 0.8
 
     # scene.world.color = (0.8, 0.8, 0.8)
@@ -216,23 +213,13 @@ def generate_random_views(
 
         point_camera_at_origin(camera)
 
-        output_path = (
-            output_dir
-            / f"view_{start_index + i:02d}.png"
-        )
+        output_path = output_dir / f"view_{start_index + i:02d}.png"
 
-        bpy.context.scene.render.filepath = str(
-            output_path
-        )
+        bpy.context.scene.render.filepath = str(output_path)
 
-        print(
-            f"[Blender] Rendering random view "
-            f"{start_index + i:02d}"
-        )
+        print(f"[Blender] Rendering random view " f"{start_index + i:02d}")
 
-        bpy.ops.render.render(
-            write_still=True
-        )
+        bpy.ops.render.render(write_still=True)
 
 
 def generate_circular_elevated_views(
@@ -246,9 +233,7 @@ def generate_circular_elevated_views(
     elevation = -0.2617993878
 
     for i in range(count):
-        azimuth = (
-            2 * math.pi * i / count
-        )
+        azimuth = 2 * math.pi * i / count
 
         camera.location = spherical_to_cartesian(
             radius,
@@ -258,23 +243,13 @@ def generate_circular_elevated_views(
 
         point_camera_at_origin(camera)
 
-        output_path = (
-            output_dir
-            / f"view_{start_index + i:02d}.png"
-        )
+        output_path = output_dir / f"view_{start_index + i:02d}.png"
 
-        bpy.context.scene.render.filepath = str(
-            output_path
-        )
+        bpy.context.scene.render.filepath = str(output_path)
 
-        print(
-            f"[Blender] Rendering circular view "
-            f"{start_index + i:02d}"
-        )
+        print(f"[Blender] Rendering circular view " f"{start_index + i:02d}")
 
-        bpy.ops.render.render(
-            write_still=True
-        )
+        bpy.ops.render.render(write_still=True)
 
 
 def main():

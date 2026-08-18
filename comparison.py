@@ -1,5 +1,7 @@
 from pathlib import Path
+
 from PIL import Image, ImageDraw
+
 
 def create_comparison(
     cad2tech_collage,
@@ -13,7 +15,10 @@ def create_comparison(
     cad_image = Image.open(cad2tech_collage).convert("RGB")
     iso_image = Image.open(iso_collage).convert("RGB")
 
-    target_height = max(cad_image.height, iso_image.height,)
+    target_height = max(
+        cad_image.height,
+        iso_image.height,
+    )
 
     def resize_to_height(image, height):
         ratio = height / image.height
@@ -22,16 +27,22 @@ def create_comparison(
 
         return image.resize((new_width, height))
 
-    cad_image = resize_to_height(cad_image, target_height,)
+    cad_image = resize_to_height(
+        cad_image,
+        target_height,
+    )
 
-    iso_image = resize_to_height(iso_image, target_height,)
+    iso_image = resize_to_height(
+        iso_image,
+        target_height,
+    )
 
     header_height = 80
     gap = 20
 
-    total_width = (cad_image.width + iso_image.width + gap)
+    total_width = cad_image.width + iso_image.width + gap
 
-    total_height = (target_height + header_height)
+    total_height = target_height + header_height
 
     comparison = Image.new(
         "RGB",
@@ -54,7 +65,11 @@ def create_comparison(
         anchor="mm",
     )
 
-    draw.text((cad_image.width + gap + iso_image.width // 2, 30,),
+    draw.text(
+        (
+            cad_image.width + gap + iso_image.width // 2,
+            30,
+        ),
         "ISO",
         fill="black",
         anchor="mm",

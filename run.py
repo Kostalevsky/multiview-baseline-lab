@@ -1,13 +1,13 @@
 import argparse
+from pathlib import Path
+
 from baselines.cad2tech.baseline import CAD2TechBaseline
 from baselines.iso.baseline import ISOBaseline
-from pathlib import Path
 from comparison import create_comparison
 
+
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="3D Baseline Lab"
-    )
+    parser = argparse.ArgumentParser(description="3D Baseline Lab")
 
     parser.add_argument(
         "--baseline",
@@ -40,30 +40,17 @@ def main():
         cad2tech = CAD2TechBaseline()
         iso = ISOBaseline()
 
-        cad2tech_result = cad2tech.run(
-            args.input
-        )
+        cad2tech_result = cad2tech.run(args.input)
 
-        iso_result = iso.run(
-            args.input
-        )
+        iso_result = iso.run(args.input)
 
-        input_path = Path(
-            args.input
-        ).resolve()
+        input_path = Path(args.input).resolve()
 
-        project_root = Path(
-            __file__
-        ).resolve().parent
+        project_root = Path(__file__).resolve().parent
 
         model_name = input_path.stem
 
-        comparison_path = (
-            project_root
-            / "outputs"
-            / model_name
-            / "compare.png"
-        )
+        comparison_path = project_root / "outputs" / model_name / "compare.png"
 
         create_comparison(
             cad2tech_result["collage"],
@@ -72,17 +59,12 @@ def main():
         )
 
         print()
-        print(
-            f"Comparison saved to: "
-            f"{comparison_path}"
-        )
+        print(f"Comparison saved to: " f"{comparison_path}")
 
         result = {
             "cad2tech": cad2tech_result,
             "iso": iso_result,
-            "comparison": str(
-                comparison_path
-            ),
+            "comparison": str(comparison_path),
         }
 
     print("\nResult:")

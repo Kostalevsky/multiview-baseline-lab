@@ -1,15 +1,16 @@
-import bpy
 import sys
 from pathlib import Path
+
+import bpy
 from mathutils import Vector
 
 VIEWS = {
     "front": (0.0, -3.0, 0.0),
-    "back": (0.0,  3.0, 0.0),
+    "back": (0.0, 3.0, 0.0),
     "left": (-3.0, 0.0, 0.0),
     "right": (3.0, 0.0, 0.0),
     "top": (0.0, 0.0, 3.0),
-    "bottom":(0.0, 0.0, -3.0),
+    "bottom": (0.0, 0.0, -3.0),
 }
 
 
@@ -17,7 +18,7 @@ def get_args():
     if "--" not in sys.argv:
         raise RuntimeError("Arguments were not provided")
 
-    args = sys.argv[sys.argv.index("--") + 1:]
+    args = sys.argv[sys.argv.index("--") + 1 :]
 
     if len(args) < 2:
         raise RuntimeError("Expected: model_path output_dir")
@@ -35,11 +36,7 @@ def import_obj(model_path):
 
 
 def get_mesh_objects():
-    return [
-        obj
-        for obj in bpy.context.scene.objects
-        if obj.type == "MESH"
-    ]
+    return [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
 
 
 def scene_bbox(mesh_objects):
@@ -90,15 +87,11 @@ def normalize_scene(mesh_objects):
 
 
 def apply_material(mesh_objects):
-    material = bpy.data.materials.new(
-        name="BaselineMaterial"
-    )
+    material = bpy.data.materials.new(name="BaselineMaterial")
 
     material.use_nodes = True
 
-    bsdf = material.node_tree.nodes.get(
-        "Principled BSDF"
-    )
+    bsdf = material.node_tree.nodes.get("Principled BSDF")
 
     bsdf.inputs["Base Color"].default_value = (
         0.08,
@@ -150,9 +143,7 @@ def create_light():
         500,
     ]
 
-    for i, (position, energy) in enumerate(
-        zip(positions, energies)
-    ):
+    for i, (position, energy) in enumerate(zip(positions, energies)):
         light_data = bpy.data.lights.new(
             name=f"Light_{i}",
             type="AREA",
@@ -199,22 +190,13 @@ def render_views(camera, output_dir):
         camera.location = position
         point_camera_at_origin(camera)
 
-        output_path = (
-            output_dir
-            / f"{view_name}.png"
-        )
+        output_path = output_dir / f"{view_name}.png"
 
-        bpy.context.scene.render.filepath = str(
-            output_path
-        )
+        bpy.context.scene.render.filepath = str(output_path)
 
-        print(
-            f"[ISO] Rendering {view_name}"
-        )
+        print(f"[ISO] Rendering {view_name}")
 
-        bpy.ops.render.render(
-            write_still=True
-        )
+        bpy.ops.render.render(write_still=True)
 
 
 def main():

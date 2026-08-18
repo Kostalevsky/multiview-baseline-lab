@@ -1,7 +1,12 @@
-from pathlib import Path
 import subprocess
+from pathlib import Path
+
+from baselines.cad2tech.output import (
+    create_collage,
+    save_selected_views,
+)
 from baselines.cad2tech.selector import select_views
-from baselines.cad2tech.output import (save_selected_views, create_collage,)
+
 
 class CAD2TechBaseline:
     name = "cad2tech"
@@ -14,25 +19,13 @@ class CAD2TechBaseline:
 
         project_root = Path(__file__).resolve().parents[2]
 
-        blender_path = (
-            "/Applications/Blender.app/"
-            "Contents/MacOS/Blender"
-        )
+        blender_path = "/Applications/Blender.app/" "Contents/MacOS/Blender"
 
-        render_script = (
-            project_root
-            / "rendering"
-            / "render_candidates.py"
-        )
+        render_script = project_root / "rendering" / "render_candidates.py"
 
         model_name = input_path.stem
 
-        output_dir = (
-            project_root
-            / "outputs"
-            / model_name
-            / "cad2tech"
-        )
+        output_dir = project_root / "outputs" / model_name / "cad2tech"
 
         candidates_dir = output_dir / "candidates"
         collage_path = output_dir / "collage.png"
@@ -78,14 +71,10 @@ class CAD2TechBaseline:
 
         if len(candidate_paths) != 28:
             raise RuntimeError(
-                f"Expected 28 candidates, "
-                f"got {len(candidate_paths)}."
+                f"Expected 28 candidates, " f"got {len(candidate_paths)}."
             )
 
-        print(
-            f"[CAD2Tech] Generated "
-            f"{len(candidate_paths)} candidates"
-        )
+        print(f"[CAD2Tech] Generated " f"{len(candidate_paths)} candidates")
 
         print()
         print("[CAD2Tech] Step 2/3: selecting views")
@@ -117,15 +106,9 @@ class CAD2TechBaseline:
             collage_path,
         )
 
-        print(
-            f"[CAD2Tech] Selected views saved to: "
-            f"{output_dir / 'selected'}"
-        )
+        print(f"[CAD2Tech] Selected views saved to: " f"{output_dir / 'selected'}")
 
-        print(
-            f"[CAD2Tech] Collage saved to: "
-            f"{collage_path}"
-        )
+        print(f"[CAD2Tech] Collage saved to: " f"{collage_path}")
 
         print()
         print("[CAD2Tech] Done.")
