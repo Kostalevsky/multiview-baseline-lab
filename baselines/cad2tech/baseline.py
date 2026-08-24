@@ -1,11 +1,11 @@
 import subprocess
 from pathlib import Path
-
 from baselines.cad2tech.output import (
     create_collage,
     save_selected_views,
 )
 from baselines.cad2tech.selector import select_views
+from utils.blender import find_blender
 
 
 class CAD2TechBaseline:
@@ -19,7 +19,7 @@ class CAD2TechBaseline:
 
         project_root = Path(__file__).resolve().parents[2]
 
-        blender_path = "/Applications/Blender.app/" "Contents/MacOS/Blender"
+        blender_path = find_blender()
 
         render_script = project_root / "rendering" / "render_candidates.py"
 
@@ -53,13 +53,13 @@ class CAD2TechBaseline:
 
         result = subprocess.run(
             [
-                blender_path,
                 "--background",
                 "--python",
                 str(render_script),
                 "--",
                 str(input_path),
                 str(candidates_dir),
+                str(blender_path),
             ],
             text=True,
         )

@@ -1,6 +1,8 @@
 from pathlib import Path
 import subprocess
 
+from utils.blender import find_blender
+
 
 class ISOIsometricBaseline:
     name = "iso_isometric"
@@ -15,9 +17,7 @@ class ISOIsometricBaseline:
 
         project_root = Path(__file__).resolve().parents[2]
 
-        blender_path = (
-            "/Applications/Blender.app/Contents/MacOS/Blender"
-        )
+        blender_path = find_blender()
 
         render_script = (
             project_root
@@ -45,10 +45,13 @@ class ISOIsometricBaseline:
         )
 
         print("[ISO Isometric] Starting baseline")
+        print(
+            f"[ISO Isometric] Blender: {blender_path}"
+        )
 
         subprocess.run(
             [
-                blender_path,
+                str(blender_path),
                 "--background",
                 "--python",
                 str(render_script),
