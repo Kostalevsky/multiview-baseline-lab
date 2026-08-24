@@ -1,98 +1,144 @@
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
+
+
+def resize_to_height(image, target_height):
+    ratio = target_height / image.height
+
+    target_width = int(
+        image.width * ratio
+    )
+
+    return image.resize(
+        (
+            target_width,
+            target_height,
+        )
+    )
+
+
+def load_font(size):
+    try:
+        return ImageFont.truetype(
+            "DejaVuSans.ttf",
+            size,
+        )
+    except OSError:
+        return ImageFont.load_default()
 
 
 def create_comparison(
     cad2tech_collage,
     iso_collage,
+    iso_isometric_collage,
     output_path,
 ):
-    cad2tech_collage = Path(cad2tech_collage)
-    iso_collage = Path(iso_collage)
     output_path = Path(output_path)
-
-    cad_image = Image.open(cad2tech_collage).convert("RGB")
-    iso_image = Image.open(iso_collage).convert("RGB")
-
-    target_height = max(
-        cad_image.height,
-        iso_image.height,
-    )
-
-    def resize_to_height(image, height):
-        ratio = height / image.height
-
-        new_width = int(image.width * ratio)
-
-        return image.resize((new_width, height))
-
-    cad_image = resize_to_height(
-        cad_image,
-        target_height,
-    )
-
-    iso_image = resize_to_height(
-        iso_image,
-        target_height,
-    )
-
-    header_height = 80
-    gap = 20
-
-    total_width = cad_image.width + iso_image.width + gap
-
-    total_height = target_height + header_height
-
-    comparison = Image.new(
-        "RGB",
-        (
-            total_width,
-            total_height,
-        ),
-        "white",
-    )
-
-    draw = ImageDraw.Draw(comparison)
-
-    draw.text(
-        (
-            cad_image.width // 2,
-            30,
-        ),
-        "CAD2Tech",
-        fill="black",
-        anchor="mm",
-    )
-
-    draw.text(
-        (
-            cad_image.width + gap + iso_image.width // 2,
-            30,
-        ),
-        "ISO",
-        fill="black",
-        anchor="mm",
-    )
-
-    comparison.paste(
-        cad_image,
-        (0, header_height),
-    )
-
-    comparison.paste(
-        iso_image,
-        (
-            cad_image.width + gap,
-            header_height,
-        ),
-    )
 
     output_path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    comparison.save(output_path)
+    entries = [
+        (
+            "CAD2Tech",
+            Path(cad2tech_collage),
+        ),
+        (
+            "ISO Orthographic",
+            Path(iso_collage),
+        ),
+        (
+            "ISO Isometric",
+            Path(iso_isometric_collage),
+        ),
+    ]
 
-    return output_path
+    images = [
+        Image.open(path).convert("RGB")
+        for _, path in entries
+    ]
+
+    target_height = max(
+        image.height
+        for image in images
+    )
+
+    images = [
+        resize_to_height(
+            image,
+            target_height,
+        )
+        for image in images
+    ]
+
+    gap = 24
+    margin = 24
+    header_height = 100
+
+    canvas_width = (
+        sum(
+            image.width
+            for image in images
+        )
+        + gap * (len(images) - 1)
+        + margin * 2
+    )
+
+    canvas_height = (
+        target_height
+        + header_height
+        + margin * 2
+    )
+
+    canvas = Image.new(
+        "RGB",
+        (
+            canvas_width,
+            canvas_height,
+        ),
+        "white",
+    )
+
+    draw = ImageDraw.Draw(canvas)
+    font = load_font(36)
+
+    x = margin
+
+    for (label, _), image in zip(
+        entries,
+        images,
+    ):
+        center_x = (
+            x
+            + image.width // 2
+        )
+
+        draw.text(
+            (
+                center_x,
+                margin + header_height // 2,
+            ),
+            label,
+            fill="black",
+            font=font,
+            anchor="mm",
+        )
+
+        canvas.paste(
+            image,
+            (
+                x,
+                margin + header_height,
+            ),
+        )
+
+        x += image.width + gap
+
+    canvas.save(output_path)
+
+    print(
+        f"[Comparison] Saved: {output_path}"
+    )

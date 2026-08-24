@@ -5,14 +5,22 @@ from pathlib import Path
 from mathutils import Vector
 
 
+VIEWS = {
+    "front_right_top": (3.0, -3.0, 3.0),
+    "front_left_top": (-3.0, -3.0, 3.0),
+    "back_right_top": (3.0, 3.0, 3.0),
+    "back_left_top": (-3.0, 3.0, 3.0),
+}
+
+
 def get_args():
     if "--" not in sys.argv:
         raise RuntimeError("Arguments were not provided.")
 
-    args = sys.argv[sys.argv.index("--") + 1:]
+    args = sys.argv[sys.argv.index("--") + 1 :]
 
     if len(args) < 2:
-        raise RuntimeError("Expected: model_path output_path")
+        raise RuntimeError("Expected: model_path output_dir")
 
     return Path(args[0]).resolve(), Path(args[1]).resolve()
 
@@ -27,11 +35,7 @@ def import_obj(model_path):
 
 
 def get_mesh_objects():
-    return [
-        obj
-        for obj in bpy.context.scene.objects
-        if obj.type == "MESH"
-    ]
+    return [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
 
 
 def scene_bbox(mesh_objects):
@@ -65,7 +69,6 @@ def normalize_scene(mesh_objects):
     bpy.context.view_layer.update()
 
     bbox_min, bbox_max = scene_bbox(mesh_objects)
-
     center = (bbox_min + bbox_max) / 2
 
     for obj in mesh_objects:
@@ -75,15 +78,10 @@ def normalize_scene(mesh_objects):
 
 
 def apply_material(mesh_objects):
-    material = bpy.data.materials.new(
-        name="BaselineMaterial"
-    )
-
+    material = bpy.data.materials.new(name="BaselineMaterial")
     material.use_nodes = True
 
-    bsdf = material.node_tree.nodes.get(
-        "Principled BSDF"
-    )
+    bsdf = material.node_tree.nodes.get("Principled BSDF")
 
     bsdf.inputs["Base Color"].default_value = (
         0.08,
@@ -101,9 +99,8 @@ def apply_material(mesh_objects):
 
 def create_camera():
     camera_data = bpy.data.cameras.new("Camera")
-
     camera_data.type = "ORTHO"
-    camera_data.ortho_scale = 1.7
+    camera_data.ortho_scale = 1.8
 
     camera = bpy.data.objects.new(
         "Camera",
@@ -116,13 +113,7 @@ def create_camera():
     return camera
 
 
-def set_isometric_view(camera):
-    camera.location = (
-        3.0,
-        -3.0,
-        3.0,
-    )
-
+def point_camera_at_origin(camera):
     direction = Vector((0, 0, 0)) - camera.location
 
     camera.rotation_euler = direction.to_track_quat(
@@ -142,9 +133,7 @@ def create_light():
         500,
     ]
 
-    for i, (position, energy) in enumerate(
-        zip(positions, energies)
-    ):
+    for i, (position, energy) in enumerate(zip(positions, energies)):
         light_data = bpy.data.lights.new(
             name=f"Light_{i}",
             type="AREA",
@@ -160,11 +149,10 @@ def create_light():
         )
 
         bpy.context.scene.collection.objects.link(light)
-
         light.location = position
 
 
-def setup_render(output_path):
+def setup_render():
     scene = bpy.context.scene
 
     scene.render.engine = "BLENDER_EEVEE"
@@ -174,7 +162,6 @@ def setup_render(output_path):
     scene.render.resolution_percentage = 100
 
     scene.render.image_settings.file_format = "PNG"
-    scene.render.filepath = str(output_path)
 
     scene.world.use_nodes = True
 
@@ -190,24 +177,30 @@ def setup_render(output_path):
     background.inputs["Strength"].default_value = 0.8
 
 
-def render_isometric_view():
-    print("[ISO Isometric] Rendering isometric view")
+def render_views(camera, output_dir):
+    for view_name, position in VIEWS.items():
+        camera.location = position
+        point_camera_at_origin(camera)
 
-    bpy.ops.render.render(
-        write_still=True
-    )
+        output_path = output_dir / f"{view_name}.png"
+
+        bpy.context.scene.render.filepath = str(output_path)
+
+        print(f"[ISO Isometric] Rendering {view_name}")
+
+        bpy.ops.render.render(write_still=True)
 
 
 def main():
-    model_path, output_path = get_args()
+    model_path, output_dir = get_args()
 
-    output_path.parent.mkdir(
+    output_dir.mkdir(
         parents=True,
         exist_ok=True,
     )
 
     print(f"[ISO Isometric] Model: {model_path}")
-    print(f"[ISO Isometric] Output: {output_path}")
+    print(f"[ISO Isometric] Output: {output_dir}")
 
     clear_scene()
     import_obj(model_path)
@@ -221,14 +214,16 @@ def main():
     apply_material(mesh_objects)
 
     camera = create_camera()
-    set_isometric_view(camera)
 
     create_light()
-    setup_render(output_path)
+    setup_render()
 
-    render_isometric_view()
+    render_views(
+        camera,
+        output_dir,
+    )
 
-    print("[ISO Isometric] Rendering completed.")
+    print("[ISO Isometric] All four views completed.")
 
 
 if __name__ == "__main__":

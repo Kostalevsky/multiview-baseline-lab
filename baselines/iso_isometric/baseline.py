@@ -1,6 +1,7 @@
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
+from baselines.cad2tech.output import create_collage
 from utils.blender import find_blender
 
 
@@ -34,20 +35,16 @@ class ISOIsometricBaseline:
             / "iso_isometric"
         )
 
-        output_dir.mkdir(
+        selected_dir = output_dir / "selected"
+        collage_path = output_dir / "collage.png"
+
+        selected_dir.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        image_path = (
-            output_dir
-            / "isometric.png"
-        )
-
         print("[ISO Isometric] Starting baseline")
-        print(
-            f"[ISO Isometric] Blender: {blender_path}"
-        )
+        print(f"[ISO Isometric] Blender: {blender_path}")
 
         subprocess.run(
             [
@@ -57,15 +54,39 @@ class ISOIsometricBaseline:
                 str(render_script),
                 "--",
                 str(input_path),
-                str(image_path),
+                str(selected_dir),
             ],
             check=True,
         )
 
-        if not image_path.exists():
+        view_names = [
+            "front_right_top",
+            "front_left_top",
+            "back_right_top",
+            "back_left_top",
+        ]
+
+        view_paths = [
+            selected_dir / f"{view_name}.png"
+            for view_name in view_names
+        ]
+
+        missing_views = [
+            path
+            for path in view_paths
+            if not path.exists()
+        ]
+
+        if missing_views:
             raise RuntimeError(
-                "Isometric rendering was not created."
+                f"Missing isometric views: {missing_views}"
             )
+
+        create_collage(
+            view_paths,
+            collage_path,
+            columns=2,
+        )
 
         print(
             "[ISO Isometric] Baseline completed."
@@ -74,9 +95,9 @@ class ISOIsometricBaseline:
         return {
             "baseline": self.name,
             "input": str(input_path),
-            "num_views": 1,
-            "view": "front-right-top",
+            "num_views": 4,
+            "views": view_names,
             "projection": "isometric",
             "output_dir": str(output_dir),
-            "image": str(image_path),
+            "collage": str(collage_path),
         }
