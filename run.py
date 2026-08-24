@@ -1,9 +1,9 @@
 import argparse
 from pathlib import Path
-
 from baselines.cad2tech.baseline import CAD2TechBaseline
 from baselines.iso.baseline import ISOBaseline
 from comparison import create_comparison
+from baselines.iso_isometric.baseline import ISOIsometricBaseline
 
 
 def parse_args():
@@ -12,7 +12,7 @@ def parse_args():
     parser.add_argument(
         "--baseline",
         required=True,
-        choices=["cad2tech", "iso", "all"],
+        choices=["cad2tech", "iso", "iso_isometric", "all"],
         help="Baseline to run",
     )
 
@@ -34,6 +34,10 @@ def main():
 
     elif args.baseline == "iso":
         baseline = ISOBaseline()
+        result = baseline.run(args.input)
+
+    elif args.baseline == "iso_isometric":
+        baseline = ISOIsometricBaseline()
         result = baseline.run(args.input)
 
     elif args.baseline == "all":
