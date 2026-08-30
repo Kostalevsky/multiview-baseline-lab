@@ -6,9 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 def resize_to_height(image, target_height):
     ratio = target_height / image.height
 
-    target_width = int(
-        image.width * ratio
-    )
+    target_width = int(image.width * ratio)
 
     return image.resize(
         (
@@ -56,15 +54,9 @@ def create_comparison(
         ),
     ]
 
-    images = [
-        Image.open(path).convert("RGB")
-        for _, path in entries
-    ]
+    images = [Image.open(path).convert("RGB") for _, path in entries]
 
-    target_height = max(
-        image.height
-        for image in images
-    )
+    target_height = max(image.height for image in images)
 
     images = [
         resize_to_height(
@@ -79,19 +71,10 @@ def create_comparison(
     header_height = 100
 
     canvas_width = (
-        sum(
-            image.width
-            for image in images
-        )
-        + gap * (len(images) - 1)
-        + margin * 2
+        sum(image.width for image in images) + gap * (len(images) - 1) + margin * 2
     )
 
-    canvas_height = (
-        target_height
-        + header_height
-        + margin * 2
-    )
+    canvas_height = target_height + header_height + margin * 2
 
     canvas = Image.new(
         "RGB",
@@ -111,10 +94,7 @@ def create_comparison(
         entries,
         images,
     ):
-        center_x = (
-            x
-            + image.width // 2
-        )
+        center_x = x + image.width // 2
 
         draw.text(
             (
@@ -139,6 +119,4 @@ def create_comparison(
 
     canvas.save(output_path)
 
-    print(
-        f"[Comparison] Saved: {output_path}"
-    )
+    print(f"[Comparison] Saved: {output_path}")

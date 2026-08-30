@@ -12,28 +12,17 @@ class ISOIsometricBaseline:
         input_path = Path(input_path).resolve()
 
         if not input_path.exists():
-            raise FileNotFoundError(
-                f"Input model not found: {input_path}"
-            )
+            raise FileNotFoundError(f"Input model not found: {input_path}")
 
         project_root = Path(__file__).resolve().parents[2]
 
         blender_path = find_blender()
 
-        render_script = (
-            project_root
-            / "rendering"
-            / "render_iso_isometric.py"
-        )
+        render_script = project_root / "rendering" / "render_iso_isometric.py"
 
         model_name = input_path.stem
 
-        output_dir = (
-            project_root
-            / "outputs"
-            / model_name
-            / "iso_isometric"
-        )
+        output_dir = project_root / "outputs" / model_name / "iso_isometric"
 
         selected_dir = output_dir / "selected"
         collage_path = output_dir / "collage.png"
@@ -66,21 +55,12 @@ class ISOIsometricBaseline:
             "back_left_top",
         ]
 
-        view_paths = [
-            selected_dir / f"{view_name}.png"
-            for view_name in view_names
-        ]
+        view_paths = [selected_dir / f"{view_name}.png" for view_name in view_names]
 
-        missing_views = [
-            path
-            for path in view_paths
-            if not path.exists()
-        ]
+        missing_views = [path for path in view_paths if not path.exists()]
 
         if missing_views:
-            raise RuntimeError(
-                f"Missing isometric views: {missing_views}"
-            )
+            raise RuntimeError(f"Missing isometric views: {missing_views}")
 
         create_collage(
             view_paths,
@@ -88,9 +68,7 @@ class ISOIsometricBaseline:
             columns=2,
         )
 
-        print(
-            "[ISO Isometric] Baseline completed."
-        )
+        print("[ISO Isometric] Baseline completed.")
 
         return {
             "baseline": self.name,

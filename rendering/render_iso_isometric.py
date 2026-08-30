@@ -1,9 +1,8 @@
-import bpy
 import sys
 from pathlib import Path
 
+import bpy
 from mathutils import Vector
-
 
 VIEWS = {
     "front_right_top": (3.0, -3.0, 3.0),

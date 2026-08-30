@@ -35,71 +35,42 @@ def main():
     if args.baseline == "cad2tech":
         baseline = CAD2TechBaseline()
 
-        result = baseline.run(
-            args.input
-        )
+        result = baseline.run(args.input)
 
     elif args.baseline == "iso":
         baseline = ISOBaseline()
 
-        result = baseline.run(
-            args.input
-        )
+        result = baseline.run(args.input)
 
     elif args.baseline == "iso_isometric":
         baseline = ISOIsometricBaseline()
 
-        result = baseline.run(
-            args.input
-        )
+        result = baseline.run(args.input)
 
     elif args.baseline == "all":
         cad2tech = CAD2TechBaseline()
         iso = ISOBaseline()
         iso_isometric = ISOIsometricBaseline()
 
-        print(
-            "\n=== CAD2Tech ===\n"
-        )
+        print("\n=== CAD2Tech ===\n")
 
-        cad2tech_result = cad2tech.run(
-            args.input
-        )
+        cad2tech_result = cad2tech.run(args.input)
 
-        print(
-            "\n=== ISO Orthographic ===\n"
-        )
+        print("\n=== ISO Orthographic ===\n")
 
-        iso_result = iso.run(
-            args.input
-        )
+        iso_result = iso.run(args.input)
 
-        print(
-            "\n=== ISO Isometric ===\n"
-        )
+        print("\n=== ISO Isometric ===\n")
 
-        iso_isometric_result = (
-            iso_isometric.run(
-                args.input
-            )
-        )
+        iso_isometric_result = iso_isometric.run(args.input)
 
-        input_path = Path(
-            args.input
-        ).resolve()
+        input_path = Path(args.input).resolve()
 
-        project_root = Path(
-            __file__
-        ).resolve().parent
+        project_root = Path(__file__).resolve().parent
 
         model_name = input_path.stem
 
-        comparison_path = (
-            project_root
-            / "outputs"
-            / model_name
-            / "compare.png"
-        )
+        comparison_path = project_root / "outputs" / model_name / "compare.png"
 
         create_comparison(
             cad2tech_result["collage"],
@@ -112,9 +83,7 @@ def main():
             "cad2tech": cad2tech_result,
             "iso": iso_result,
             "iso_isometric": iso_isometric_result,
-            "comparison": str(
-                comparison_path
-            ),
+            "comparison": str(comparison_path),
         }
 
     print("\nResult:")

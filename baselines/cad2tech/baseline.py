@@ -1,5 +1,6 @@
 import subprocess
 from pathlib import Path
+
 from baselines.cad2tech.output import (
     create_collage,
     save_selected_views,
@@ -53,13 +54,13 @@ class CAD2TechBaseline:
 
         result = subprocess.run(
             [
+                str(blender_path),
                 "--background",
                 "--python",
                 str(render_script),
                 "--",
                 str(input_path),
                 str(candidates_dir),
-                str(blender_path),
             ],
             text=True,
         )

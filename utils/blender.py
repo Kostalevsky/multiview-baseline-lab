@@ -28,12 +28,8 @@ def find_blender():
 
     if system == "Darwin":
         candidates = [
-            Path(
-                "/Applications/Blender.app/Contents/MacOS/Blender"
-            ),
-            Path(
-                "~/Applications/Blender.app/Contents/MacOS/Blender"
-            ).expanduser(),
+            Path("/Applications/Blender.app/Contents/MacOS/Blender"),
+            Path("~/Applications/Blender.app/Contents/MacOS/Blender").expanduser(),
         ]
 
     elif system == "Windows":
@@ -42,17 +38,12 @@ def find_blender():
             r"C:\Program Files",
         )
 
-        blender_root = (
-            Path(program_files)
-            / "Blender Foundation"
-        )
+        blender_root = Path(program_files) / "Blender Foundation"
 
         if blender_root.exists():
             candidates.extend(
                 sorted(
-                    blender_root.glob(
-                        "Blender*/blender.exe"
-                    ),
+                    blender_root.glob("Blender*/blender.exe"),
                     reverse=True,
                 )
             )
