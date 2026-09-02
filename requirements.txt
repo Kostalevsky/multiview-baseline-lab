@@ -3,3 +3,5 @@ scipy
 scikit-learn
 pillow
 matplotlib
+openai
+python-dotenv

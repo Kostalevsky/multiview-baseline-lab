@@ -63,6 +63,7 @@ class CAD2TechBaseline:
                 str(candidates_dir),
             ],
             text=True,
+            check=False,
         )
 
         if result.returncode != 0:
@@ -83,7 +84,7 @@ class CAD2TechBaseline:
         (
             selected_indices,
             selected_paths,
-            embedding,
+            _embedding,
         ) = select_views(
             candidates_dir,
             num_views=6,

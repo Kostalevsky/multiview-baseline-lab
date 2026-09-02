@@ -1,12 +1,25 @@
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import (
+    Image,
+    ImageDraw,
+    ImageFont,
+)
 
 
-def resize_to_height(image, target_height):
-    ratio = target_height / image.height
+def resize_to_height(
+    image,
+    target_height,
+):
+    ratio = (
+        target_height
+        / image.height
+    )
 
-    target_width = int(image.width * ratio)
+    target_width = int(
+        image.width
+        * ratio
+    )
 
     return image.resize(
         (
@@ -23,16 +36,20 @@ def load_font(size):
             size,
         )
     except OSError:
-        return ImageFont.load_default()
+        return (
+            ImageFont.load_default()
+        )
 
 
 def create_comparison(
     cad2tech_collage,
     iso_collage,
-    iso_isometric_collage,
+    vlm_collage,
     output_path,
 ):
-    output_path = Path(output_path)
+    output_path = Path(
+        output_path
+    )
 
     output_path.parent.mkdir(
         parents=True,
@@ -42,21 +59,37 @@ def create_comparison(
     entries = [
         (
             "CAD2Tech",
-            Path(cad2tech_collage),
+            Path(
+                cad2tech_collage
+            ),
         ),
         (
             "ISO Orthographic",
-            Path(iso_collage),
+            Path(
+                iso_collage
+            ),
         ),
         (
-            "ISO Isometric",
-            Path(iso_isometric_collage),
+            "VLM Iterative",
+            Path(
+                vlm_collage
+            ),
         ),
     ]
 
-    images = [Image.open(path).convert("RGB") for _, path in entries]
+    images = [
+        Image.open(
+            path
+        ).convert(
+            "RGB"
+        )
+        for _, path in entries
+    ]
 
-    target_height = max(image.height for image in images)
+    target_height = max(
+        image.height
+        for image in images
+    )
 
     images = [
         resize_to_height(
@@ -71,10 +104,25 @@ def create_comparison(
     header_height = 100
 
     canvas_width = (
-        sum(image.width for image in images) + gap * (len(images) - 1) + margin * 2
+        sum(
+            image.width
+            for image in images
+        )
+        + gap
+        * (
+            len(images)
+            - 1
+        )
+        + margin
+        * 2
     )
 
-    canvas_height = target_height + header_height + margin * 2
+    canvas_height = (
+        target_height
+        + header_height
+        + margin
+        * 2
+    )
 
     canvas = Image.new(
         "RGB",
@@ -85,21 +133,35 @@ def create_comparison(
         "white",
     )
 
-    draw = ImageDraw.Draw(canvas)
-    font = load_font(36)
+    draw = ImageDraw.Draw(
+        canvas
+    )
+
+    font = load_font(
+        36
+    )
 
     x = margin
 
-    for (label, _), image in zip(
+    for (
+        label,
+        _,
+    ), image in zip(
         entries,
         images,
     ):
-        center_x = x + image.width // 2
+        center_x = (
+            x
+            + image.width
+            // 2
+        )
 
         draw.text(
             (
                 center_x,
-                margin + header_height // 2,
+                margin
+                + header_height
+                // 2,
             ),
             label,
             fill="black",
@@ -111,12 +173,21 @@ def create_comparison(
             image,
             (
                 x,
-                margin + header_height,
+                margin
+                + header_height,
             ),
         )
 
-        x += image.width + gap
+        x += (
+            image.width
+            + gap
+        )
 
-    canvas.save(output_path)
+    canvas.save(
+        output_path
+    )
 
-    print(f"[Comparison] Saved: {output_path}")
+    print(
+        "[Comparison] Saved: "
+        f"{output_path}"
+    )

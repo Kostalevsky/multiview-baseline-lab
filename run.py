@@ -3,22 +3,22 @@ from pathlib import Path
 
 from baselines.cad2tech.baseline import CAD2TechBaseline
 from baselines.iso.baseline import ISOBaseline
-from baselines.iso_isometric.baseline import ISOIsometricBaseline
+from baselines.vlm_iterative.baseline import VLMIterativeBaseline
 from comparison import create_comparison
 
 
-def parse_args():
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
         "--baseline",
-        required=True,
         choices=[
             "cad2tech",
             "iso",
-            "iso_isometric",
+            "vlm_iterative",
             "all",
         ],
+        required=True,
     )
 
     parser.add_argument(
@@ -26,68 +26,124 @@ def parse_args():
         required=True,
     )
 
-    return parser.parse_args()
-
-
-def main():
-    args = parse_args()
+    args = parser.parse_args()
 
     if args.baseline == "cad2tech":
         baseline = CAD2TechBaseline()
 
-        result = baseline.run(args.input)
+        result = baseline.run(
+            args.input,
+        )
+
+        print(result)
 
     elif args.baseline == "iso":
         baseline = ISOBaseline()
 
-        result = baseline.run(args.input)
+        result = baseline.run(
+            args.input,
+        )
 
-    elif args.baseline == "iso_isometric":
-        baseline = ISOIsometricBaseline()
+        print(result)
 
-        result = baseline.run(args.input)
+    elif args.baseline == "vlm_iterative":
+        baseline = VLMIterativeBaseline()
+
+        result = baseline.run(
+            args.input,
+        )
+
+        print(result)
 
     elif args.baseline == "all":
+        input_path = Path(
+            args.input
+        ).resolve()
+
+        project_root = (
+            Path(__file__)
+            .resolve()
+            .parent
+        )
+
+        print()
+        print("=" * 60)
+        print("Running all baselines")
+        print("=" * 60)
+        print()
+
         cad2tech = CAD2TechBaseline()
         iso = ISOBaseline()
-        iso_isometric = ISOIsometricBaseline()
+        vlm_iterative = (
+            VLMIterativeBaseline()
+        )
 
-        print("\n=== CAD2Tech ===\n")
+        cad2tech_result = (
+            cad2tech.run(
+                input_path
+            )
+        )
 
-        cad2tech_result = cad2tech.run(args.input)
+        iso_result = (
+            iso.run(
+                input_path
+            )
+        )
 
-        print("\n=== ISO Orthographic ===\n")
+        vlm_result = (
+            vlm_iterative.run(
+                input_path
+            )
+        )
 
-        iso_result = iso.run(args.input)
+        model_name = (
+            input_path.stem
+        )
 
-        print("\n=== ISO Isometric ===\n")
-
-        iso_isometric_result = iso_isometric.run(args.input)
-
-        input_path = Path(args.input).resolve()
-
-        project_root = Path(__file__).resolve().parent
-
-        model_name = input_path.stem
-
-        comparison_path = project_root / "outputs" / model_name / "compare.png"
+        comparison_path = (
+            project_root
+            / "outputs"
+            / model_name
+            / "compare.png"
+        )
 
         create_comparison(
-            cad2tech_result["collage"],
-            iso_result["collage"],
-            iso_isometric_result["collage"],
+            cad2tech_result[
+                "collage"
+            ],
+            iso_result[
+                "collage"
+            ],
+            vlm_result[
+                "collage"
+            ],
             comparison_path,
         )
 
         result = {
-            "cad2tech": cad2tech_result,
-            "iso": iso_result,
-            "iso_isometric": iso_isometric_result,
-            "comparison": str(comparison_path),
+            "cad2tech": (
+                cad2tech_result
+            ),
+            "iso": (
+                iso_result
+            ),
+            "vlm_iterative": (
+                vlm_result
+            ),
+            "comparison": str(
+                comparison_path
+            ),
         }
 
-    print("\nResult:")
-    print(result)
+        print()
+        print("=" * 60)
+        print(
+            "All baselines completed"
+        )
+        print("=" * 60)
+        print()
+
+        print(result)
 
 
 if __name__ == "__main__":

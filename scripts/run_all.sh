@@ -14,7 +14,7 @@ if [[ ! -x "$PYTHON" ]]; then
     exit 1
 fi
 
-MODEL="${1:-$PROJECT_ROOT/examples/models/part.obj}"
+MODEL="${1:-$PROJECT_ROOT/examples/models/part_spinner.obj}"
 
 echo "Running all baselines"
 echo "Model: $MODEL"
