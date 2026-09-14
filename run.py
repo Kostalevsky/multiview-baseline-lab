@@ -3,6 +3,7 @@ from pathlib import Path
 
 from baselines.cad2tech.baseline import CAD2TechBaseline
 from baselines.iso.baseline import ISOBaseline
+from baselines.vin_nbv.baseline import VINNBVBaseline
 from baselines.vlm_iterative.baseline import VLMIterativeBaseline
 from comparison import create_comparison
 
@@ -16,6 +17,7 @@ def main():
             "cad2tech",
             "iso",
             "vlm_iterative",
+            "vin_nbv",
             "all",
         ],
         required=True,
@@ -55,6 +57,15 @@ def main():
 
         print(result)
 
+    elif args.baseline == "vin_nbv":
+        baseline = VINNBVBaseline()
+
+        result = baseline.run(
+            args.input,
+        )
+
+        print(result)
+
     elif args.baseline == "all":
         input_path = Path(
             args.input
@@ -74,9 +85,7 @@ def main():
 
         cad2tech = CAD2TechBaseline()
         iso = ISOBaseline()
-        vlm_iterative = (
-            VLMIterativeBaseline()
-        )
+        vin_nbv = VINNBVBaseline()
 
         cad2tech_result = (
             cad2tech.run(
@@ -90,8 +99,8 @@ def main():
             )
         )
 
-        vlm_result = (
-            vlm_iterative.run(
+        vin_nbv_result = (
+            vin_nbv.run(
                 input_path
             )
         )
@@ -114,7 +123,7 @@ def main():
             iso_result[
                 "collage"
             ],
-            vlm_result[
+            vin_nbv_result[
                 "collage"
             ],
             comparison_path,
@@ -127,8 +136,8 @@ def main():
             "iso": (
                 iso_result
             ),
-            "vlm_iterative": (
-                vlm_result
+            "vin_nbv": (
+                vin_nbv_result
             ),
             "comparison": str(
                 comparison_path

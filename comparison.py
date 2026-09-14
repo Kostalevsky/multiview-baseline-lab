@@ -44,7 +44,7 @@ def load_font(size):
 def create_comparison(
     cad2tech_collage,
     iso_collage,
-    vlm_collage,
+    vin_nbv_collage,
     output_path,
 ):
     output_path = Path(
@@ -70,9 +70,9 @@ def create_comparison(
             ),
         ),
         (
-            "VLM Iterative",
+            "VIN-NBV Oracle",
             Path(
-                vlm_collage
+                vin_nbv_collage
             ),
         ),
     ]
@@ -191,3 +191,5 @@ def create_comparison(
         "[Comparison] Saved: "
         f"{output_path}"
     )
+
+    return output_path
