@@ -5,6 +5,7 @@ from baselines.cad2tech.baseline import CAD2TechBaseline
 from baselines.iso.baseline import ISOBaseline
 from baselines.vin_nbv.baseline import VINNBVBaseline
 from baselines.vlm_iterative.baseline import VLMIterativeBaseline
+from baselines.canonical.baseline import CanonicalBaseline
 from comparison import create_comparison
 
 
@@ -16,6 +17,7 @@ def main():
         choices=[
             "cad2tech",
             "iso",
+            "canonical",
             "vlm_iterative",
             "vin_nbv",
             "all",
@@ -41,6 +43,17 @@ def main():
 
     elif args.baseline == "iso":
         baseline = ISOBaseline()
+
+        result = baseline.run(
+            args.input,
+        )
+
+        print(result)
+    
+    elif args.baseline == "canonical":
+        baseline = (
+            CanonicalBaseline()
+        )
 
         result = baseline.run(
             args.input,
