@@ -1,7 +1,14 @@
 import shutil
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
+
+
+def load_font(size):
+    try:
+        return ImageFont.truetype("DejaVuSans.ttf", size)
+    except OSError:
+        return ImageFont.load_default(size=size)
 
 
 def save_selected_views(
@@ -35,33 +42,47 @@ def create_collage(
     image_paths,
     output_path,
     columns=3,
+    labels=None,
 ):
     images = [Image.open(path).convert("RGB") for path in image_paths]
 
     if not images:
         raise ValueError("No images for collage.")
 
+    if labels is not None and len(labels) != len(images):
+        raise ValueError("Each image must have exactly one label.")
+
     width, height = images[0].size
 
     rows = (len(images) + columns - 1) // columns
+    label_height = 64 if labels is not None else 0
 
     collage = Image.new(
         "RGB",
         (
             columns * width,
-            rows * height,
+            rows * (height + label_height),
         ),
         "white",
     )
 
+    draw = ImageDraw.Draw(collage)
+    font = load_font(24)
+
     for i, image in enumerate(images):
         x = (i % columns) * width
-        y = (i // columns) * height
+        y = (i // columns) * (height + label_height)
 
         collage.paste(
             image,
             (x, y),
         )
+
+        if labels is not None:
+            draw.text(
+                (x + width // 2, y + height + label_height // 2),
+                labels[i], fill="black", font=font, anchor="mm",
+            )
 
     output_path = Path(output_path)
 

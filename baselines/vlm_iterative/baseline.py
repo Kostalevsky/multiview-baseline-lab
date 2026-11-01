@@ -146,6 +146,12 @@ class VLMIterativeBaseline:
             selected_paths,
             collage_path,
             columns=3,
+            labels=[
+                f"#{position} | candidate {index:02d}\n"
+                f"az {candidate_map[index]['azimuth']:g} | "
+                f"el {candidate_map[index]['elevation']:g} deg"
+                for position, index in enumerate(selected_indices, start=1)
+            ],
         )
 
         history_data = {

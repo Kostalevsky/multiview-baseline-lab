@@ -37,7 +37,7 @@ def load_font(size):
         )
     except OSError:
         return (
-            ImageFont.load_default()
+            ImageFont.load_default(size=size)
         )
 
 
@@ -46,6 +46,7 @@ def create_comparison(
     iso_collage,
     vin_nbv_collage,
     output_path,
+    canonical_collage=None,
 ):
     output_path = Path(
         output_path
@@ -76,6 +77,9 @@ def create_comparison(
             ),
         ),
     ]
+
+    if canonical_collage is not None:
+        entries.append(("Canonical (8 views)", Path(canonical_collage)))
 
     images = [
         Image.open(

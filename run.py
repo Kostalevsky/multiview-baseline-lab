@@ -99,6 +99,7 @@ def main():
         cad2tech = CAD2TechBaseline()
         iso = ISOBaseline()
         vin_nbv = VINNBVBaseline()
+        canonical = CanonicalBaseline()
 
         cad2tech_result = (
             cad2tech.run(
@@ -117,6 +118,8 @@ def main():
                 input_path
             )
         )
+
+        canonical_result = canonical.run(input_path)
 
         model_name = (
             input_path.stem
@@ -140,9 +143,11 @@ def main():
                 "collage"
             ],
             comparison_path,
+            canonical_collage=canonical_result["collage"],
         )
 
         result = {
+            "canonical": canonical_result,
             "cad2tech": (
                 cad2tech_result
             ),

@@ -84,6 +84,10 @@ class ISOBaseline:
             view_paths,
             collage_path,
             columns=3,
+            labels=[
+                f"#{position} | {name}"
+                for position, name in enumerate(view_names, start=1)
+            ],
         )
 
         print(f"[ISO] Collage saved to: " f"{collage_path}")

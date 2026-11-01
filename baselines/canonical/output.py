@@ -37,7 +37,7 @@ def load_font(size):
             size,
         )
     except OSError:
-        return ImageFont.load_default()
+        return ImageFont.load_default(size=size)
 
 
 def create_canonical_collage(
@@ -110,7 +110,7 @@ def create_canonical_collage(
                 x + tile_size // 2,
                 y + label_height // 2,
             ),
-            VIEW_LABELS[view_name],
+            f"#{position + 1} | {VIEW_LABELS[view_name]}",
             fill="black",
             font=font,
             anchor="mm",

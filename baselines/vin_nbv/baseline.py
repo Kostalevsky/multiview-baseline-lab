@@ -103,23 +103,28 @@ class VINNBVBaseline:
 
         collage_path = output_dir / "collage.png"
 
+        candidate_metadata = self._load_candidate_metadata(
+            candidates_dir / "metadata.json"
+        )
+        candidate_map = {
+            int(view["index"]): view for view in candidate_metadata["views"]
+        }
+
         create_collage(
             image_paths=(selected_paths),
             output_path=(collage_path),
             columns=3,
+            labels=[
+                f"#{position} | candidate {index:03d}\n"
+                f"az {candidate_map[index]['azimuth']:.1f} | "
+                f"el {candidate_map[index]['elevation']:.1f} deg"
+                for position, index in enumerate(selected_indices, start=1)
+            ],
         )
 
         history_path = output_dir / "selection_history.json"
 
         selected_metadata = []
-
-        candidate_metadata = self._load_candidate_metadata(
-            candidates_dir / "metadata.json"
-        )
-
-        candidate_map = {
-            int(view["index"]): view for view in candidate_metadata["views"]
-        }
 
         for position, (
             index,

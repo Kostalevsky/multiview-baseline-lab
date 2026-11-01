@@ -106,6 +106,10 @@ class CAD2TechBaseline:
         create_collage(
             saved_paths,
             collage_path,
+            labels=[
+                f"#{position} | candidate {index:02d}"
+                for position, index in enumerate(selected_indices, start=1)
+            ],
         )
 
         print(f"[CAD2Tech] Selected views saved to: " f"{output_dir / 'selected'}")
