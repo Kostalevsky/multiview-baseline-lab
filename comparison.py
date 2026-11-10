@@ -47,6 +47,10 @@ def create_comparison(
     vin_nbv_collage,
     output_path,
     canonical_collage=None,
+    mvcnn12_collage=None,
+    mvcnn6_collage=None,
+    vlm_iterative_collage=None,
+    gift_collage=None,
 ):
     output_path = Path(
         output_path
@@ -70,16 +74,22 @@ def create_comparison(
                 iso_collage
             ),
         ),
-        (
-            "VIN-NBV Oracle",
-            Path(
-                vin_nbv_collage
-            ),
-        ),
     ]
+
+    if vin_nbv_collage is not None:
+        entries.append(("VIN-NBV Oracle", Path(vin_nbv_collage)))
 
     if canonical_collage is not None:
         entries.append(("Canonical (8 views)", Path(canonical_collage)))
+
+    for label, path in (
+        ("VLM Iterative", vlm_iterative_collage),
+        ("MVCNN Views (12 views)", mvcnn12_collage),
+        ("MVCNN Views (6 views)", mvcnn6_collage),
+        ("GIFT-inspired Fibonacci (6 views)", gift_collage),
+    ):
+        if path is not None:
+            entries.append((label, Path(path)))
 
     images = [
         Image.open(

@@ -1,0 +1,62 @@
+{
+  "checked_on": "2026-11-01",
+  "conclusion": "no_full_mvtn_checkpoint_found_in_checked_sources",
+  "sources": {
+    "MVTN_master": {
+      "commit": "e07327d926b1c8c18ab03c72b3bb85314920bf5a",
+      "tree_complete": true,
+      "url": "https://github.com/ajhamdi/MVTN/tree/e07327d926b1c8c18ab03c72b3bb85314920bf5a",
+      "published_binary_files": "PointNet, DGCNN, and results/checkpoints ResNet files"
+    },
+    "MVTN_main": {
+      "commit": "d40486cdf74cd474c03be78d4b94e2d1d30b99b2",
+      "tree_complete": true,
+      "url": "https://github.com/ajhamdi/MVTN/tree/d40486cdf74cd474c03be78d4b94e2d1d30b99b2",
+      "content": "README only"
+    },
+    "mvtorch_main": {
+      "commit": "909fbe6bece81486ce13812733bb6ae3a1a7f3a4",
+      "tree_complete": true,
+      "url": "https://github.com/ajhamdi/mvtorch/tree/909fbe6bece81486ce13812733bb6ae3a1a7f3a4",
+      "published_binary_files": "same PointNet and DGCNN Git blobs as MVTN",
+      "view_selector_git_blob": "ed7830fb3512552c1c13f5a917b32e2633a59e3b",
+      "view_selector_loads": "caller-supplied checkpoint['mvtn']"
+    },
+    "releases": {
+      "MVTN": [],
+      "mvtorch": []
+    }
+  },
+  "additional_binary_inspections": [
+    {
+      "path": "results/checkpoints/shapenet/model-00029.pth",
+      "size_bytes": 44900985,
+      "git_blob": "2afd50593262637af288785b359397b3b34ba39a",
+      "sha256": "857bb1e85cfb4a89ee3dae6f5799decbb1934f41853b544e6b58679f53bb5ffe",
+      "load": "torch.load(weights_only=True, map_location='cpu')",
+      "root_type": "OrderedDict",
+      "num_keys": 122,
+      "example_key": "net.conv1.weight",
+      "mvtn_state_present": false,
+      "camera_regressor_keys_present": false
+    },
+    {
+      "path": "results/checkpoints/scanobjectnn/model-00029.pth",
+      "size_bytes": 44818937,
+      "git_blob": "52d274e37004126a953527cba5bc8c4ad8f4d90a",
+      "sha256": "e5c32c1a88555cd792fe7e385ec7fdcc94e8373a9b1cfb64315bca651f4b33cc",
+      "load": "torch.load(weights_only=True, map_location='cpu')",
+      "root_type": "OrderedDict",
+      "num_keys": 122,
+      "example_key": "net.conv1.weight",
+      "mvtn_state_present": false,
+      "camera_regressor_keys_present": false
+    }
+  ],
+  "limits": [
+    "ModelNet model-00031 was inspected earlier; other ModelNet epochs were not downloaded",
+    "PointNet and DGCNN binary files were not downloaded during this search",
+    "No claim of exhaustive search across forks, Git history or private storage",
+    "GitHub connector rejected the tags endpoint; tags were not inspected"
+  ]
+}

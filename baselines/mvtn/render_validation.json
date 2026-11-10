@@ -1,0 +1,42 @@
+{
+  "checked_on": "2026-11-01",
+  "blender_version": "5.2.0 LTS",
+  "engine": "CYCLES",
+  "device": "CPU",
+  "checkpoint": "synthetic_only",
+  "fixture": "asymmetric object assembled from three boxes",
+  "coordinate_frame": "mvtn_y_up",
+  "azimuth_degrees": [0, 90, 0],
+  "elevation_degrees": [0, 0, 90],
+  "distance": 3.0,
+  "visual_smoke_test": {
+    "num_views": 3,
+    "image_size": 256,
+    "samples": 8,
+    "collage_visually_inspected": true,
+    "mesh_bounds_match_input_geometry": true,
+    "mesh_matrix_is_identity": true,
+    "camera_matrices_match_request": true,
+    "projection_probe_count": 12,
+    "max_abs_ndc_depth_error": 9.53674481607436e-8,
+    "projection_tolerance": 1e-6,
+    "up_fallback": [false, false, true]
+  },
+  "automated_integration_test": {
+    "file": "tests/test_mvtn_render.py",
+    "method": "test_real_blender_render_and_projection",
+    "entrypoint": "run.py --baseline mvtn",
+    "image_size": 128,
+    "samples": 4,
+    "passed": true
+  },
+  "targeted_suite": {
+    "tests_passed": 19,
+    "tests_skipped": 0,
+    "blender_enabled": true,
+    "upstream_parity_enabled": true
+  },
+  "trained_mvtn_quality_evaluated": false,
+  "paper_renderer_reproduced": false,
+  "existing_outputs_used": false
+}

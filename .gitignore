@@ -47,4 +47,9 @@ build/
 dist/
 *.egg-info/
 
+/baselines/mvtn/readme.md
+/baselines/mvtn/TRAINING_PLAN.md
+
 AGENTS.md
+
+README.md

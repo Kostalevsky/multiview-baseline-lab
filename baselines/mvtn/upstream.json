@@ -1,0 +1,41 @@
+{
+  "checked_on": "2026-11-01",
+  "repository": "https://github.com/ajhamdi/MVTN",
+  "commit": "e07327d926b1c8c18ab03c72b3bb85314920bf5a",
+  "source_git_blobs": {
+    "models/mvtn.py": "44a2f8a95ab47724c6ea1625b647054f99806630",
+    "models/pointnet.py": "5944164e9e30438946d82b081aaeb371872d5fdb",
+    "models/blocks.py": "f7023312caa498ac8d287a6f23f5f180314253be",
+    "util.py": "4d433bc5157b16437168a441942e7e01d421d89c"
+  },
+  "audited_checkpoint": {
+    "path": "results/checkpoints/modelnet/model-00031.pth",
+    "url": "https://raw.githubusercontent.com/ajhamdi/MVTN/e07327d926b1c8c18ab03c72b3bb85314920bf5a/results/checkpoints/modelnet/model-00031.pth",
+    "size_bytes": 44870201,
+    "git_blob": "9f4374ea5fba36e9baeb5405ec64712ac716cbc9",
+    "sha256": "c0c83239964d49428c30f186a2acb2d063822ae50c1266098761e1e81883de72",
+    "inspection": "zip_pickle_opcodes_then_torch_weights_only_cpu",
+    "observed_key_examples": ["net.conv1.weight", "net.layer1.0.conv1.weight", "net.fc"],
+    "mvtn_keys_found": false,
+    "usable_for_camera_prediction": false,
+    "author_explanation": "https://github.com/ajhamdi/MVTN/issues/3#issuecomment-927260492"
+  },
+  "runtime_verification": {
+    "checked_on": "2026-11-01",
+    "torch": "2.15.0",
+    "device": "cpu",
+    "weights": "synthetic_only",
+    "seed": 20261101,
+    "batch_size": 2,
+    "num_points": 2048,
+    "num_views": [4, 6, 12],
+    "variants": ["learned_circular", "learned_spherical"],
+    "max_abs_camera_parameter_error": 0.0,
+    "tests_passed": 12,
+    "tests_skipped": 0,
+    "trained_view_quality_evaluated": false
+  },
+  "full_mvtn_checkpoint_verified": false,
+  "other_checkpoint_binaries_inspected": true,
+  "additional_checkpoint_audit": "checkpoint_search.json"
+}
